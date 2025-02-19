@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ScrollArea } from "@/components/ui/scroll-area"
 import "./globals.css";
 import Nav from "@/components/Nav";
 
@@ -17,10 +18,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`flex flex-col min-h-screen ${inter.className}`}>
-        <Nav />
-        <main>
-          {children}
-        </main>
+        <ScrollArea>
+          <Nav />
+          <main>
+            {children}
+          </main>
+        </ScrollArea>
       </body>
     </html>
   );

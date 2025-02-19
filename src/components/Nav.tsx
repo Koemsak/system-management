@@ -10,9 +10,11 @@ const Nav = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   useLayoutEffect(() => {
     const el = document.documentElement;
-    if (el.classList.contains("dark")) {
+    if (el.classList.contains("dark") || localStorage.getItem("theme") === "dark") {
+      el.classList.add("dark");
       setIsDarkMode(true);
     } else {
+      el.classList.remove("dark");
       setIsDarkMode(false);
     }
   }, []);
@@ -21,6 +23,7 @@ const Nav = () => {
     const el = document.documentElement;
     el.classList.toggle("dark");
     setIsDarkMode((prev) => !prev);
+    localStorage.setItem("theme", isDarkMode ? "light" : "dark");
   };
 
   const toggleNavbar = () => {
@@ -41,7 +44,7 @@ const Nav = () => {
           <ul className="hidden lg:flex ml-14 space-x-8">
             {navItems.map((item, index) => (
               <li key={index}>
-                <a href={item.href}>{item.label}</a>
+                <a href={item.href} className="ml-auto flex items-center gap-1.5 sm:text-sm"> {item.icon} {item.label}</a>
               </li>
             ))}
           </ul>
