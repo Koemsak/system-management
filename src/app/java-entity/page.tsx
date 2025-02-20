@@ -60,17 +60,37 @@ const page = () => {
     // }
 
     setLoading(true);
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-      const response = await fetch(`${baseUrl}/generate-entity`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: jsonValue,
-      });
-      const data = await response.json();
-      console.log(data);
-      setLoading(false);
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const response = await fetch(`${baseUrl}/generate-entity`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: jsonValue,
+    });
+    const data = await response.json();
+    console.log(data);
+    setLoading(false);
+  };
+
+  const handleTextSend = async () => {
+    const requestBody = {
+      tableName,
+      uri,
+      userName,
+    };
+    setLoading(true);
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const response = await fetch(`${baseUrl}/generate-entity`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+    const data = await response.json();
+    setLoading(false);
+    console.log(data);
   };
 
   return (
@@ -98,7 +118,7 @@ const page = () => {
             <CardContent className="space-y-2">
               <JsonTextarea initialValue={``} onChange={handleCodeChange} />
               <Button
-                disabled={!isJson}
+                disabled={!isJson || loading}
                 onClick={handleJsonSend}
                 className="w-full mt-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 text-white hover:bg-gradient-to-r"
               >
@@ -161,7 +181,8 @@ const page = () => {
               </div>
               <div className="grid gap-1"></div>
               <Button
-                disabled={!isDataValid()}
+                disabled={!isDataValid() || loading}
+                onClick={handleTextSend}
                 className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 text-white hover:bg-gradient-to-r"
               >
                 {loading ? (
