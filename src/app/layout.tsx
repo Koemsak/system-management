@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea } from "@/components/ui/scroll-area";
 import "./globals.css";
 import Nav from "@/components/Nav";
 
@@ -17,12 +17,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`flex flex-col min-h-screen ${inter.className}`}>
-        <ScrollArea>
-          <Nav />
-          <main>
-            {children}
-          </main>
+      <body className={`${inter.className} m-0 p-0 flex flex-col h-screen`}>
+        <Nav />
+        <ScrollArea className="flex-1 w-full rounded-md border overflow-y-auto">
+          {children}
         </ScrollArea>
       </body>
     </html>

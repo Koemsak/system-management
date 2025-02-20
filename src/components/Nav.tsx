@@ -4,13 +4,19 @@ import Image from "next/image";
 import { navItems } from "@/constants";
 import { Moon, Sun } from "lucide-react";
 import { useState, useLayoutEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Nav = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const pathname = usePathname();
   useLayoutEffect(() => {
     const el = document.documentElement;
-    if (el.classList.contains("dark") || localStorage.getItem("theme") === "dark") {
+    if (
+      el.classList.contains("dark") ||
+      localStorage.getItem("theme") === "dark"
+    ) {
       el.classList.add("dark");
       setIsDarkMode(true);
     } else {
@@ -31,22 +37,38 @@ const Nav = () => {
   };
 
   return (
-    <div
+    <nav
       className={
-        "px-4 py-2 flex items-center h-14 z-50 bg-card backdrop-blur-lg border-b border-border sticky top-0"
+        "sticky top-0 z-50 py-3 backdrop-blur-lg"
       }
     >
       <div className="container px-4 mx-auto relative lg:text-sm">
         <div className="flex justify-between items-center">
           <div className="flex items-center flex-shrink-0">
-            <Image src={isDarkMode ? "/white-para.png" : "/para.png"} alt="logo" width={70} height={50} />
+            <Image
+              src={isDarkMode ? "/white-para.png" : "/para.png"}
+              className="object-contain w-auto h-auto"
+              alt="logo"
+              width={50}
+              height={30}
+            />
           </div>
           <ul className="hidden lg:flex ml-14 space-x-8">
-            {navItems.map((item, index) => (
-              <li key={index}>
-                <a href={item.href} className="ml-auto flex items-center gap-1.5 sm:text-sm"> {item.icon} {item.label}</a>
-              </li>
-            ))}
+            {navItems.map((item, index) => {
+              const isActive = pathname === item.href;
+              return (
+                <li key={index}>
+                  <Link
+                    href={item.href}
+                    className={`ml-auto flex items-center gap-1.5 sm:text-sm ${
+                      isActive ? "text-orange-500 font-bold" : ""
+                    }`}
+                  >
+                    {item.icon} {item.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
           <div className="lg:flex justify-center space-x-2 items-center">
             <button
@@ -65,7 +87,7 @@ const Nav = () => {
           </div>
         </div>
       </div>
-    </div>
+    </nav>
   );
 };
 

@@ -4,12 +4,12 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 export default function Home() {
   return (
-    <div className="container px-10 py-5">
+    <div className="container px-10 py-5 mx-auto">
       <div className="p-2 max-w-lg mx-auto">
         <div className="flex flex-col items-center mb-4">
           <div className="flex-shrink-0">
             <div className="relative flex h-5 items-center space-x-2 text-[13px] mb-3 px-6 dark:shadow-gray-800 dark:shadow-md shadow-lg rounded-full border-t dark:border-gray-800 border-gray-100 py-4">
-              <p className="font-medium">Theara Dawn </p>
+              <p className="font-medium">Para </p>
               <span className="text-gray-400 font-light">|</span>
               <p className="text-gray-400 font-light">
                 Spring Developer Advocate
