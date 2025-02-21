@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} m-0 p-0 flex flex-col h-screen`}>
         <Nav />
-        <ScrollArea className="flex-1 w-full rounded-md border overflow-y-auto">
+        <ScrollArea className="flex-1 w-full border-t rounded-none overflow-y-auto">
           {children}
         </ScrollArea>
       </body>

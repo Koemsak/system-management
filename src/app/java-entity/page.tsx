@@ -12,12 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
+import { Loader, Check, Clipboard } from "lucide-react";
 
-const page = () => {
-  const { toast } = useToast();
+
+const Page = () => {
   const [isJson, setIsJson] = useState(false);
   const [jsonValue, setJsonValue] = useState("");
 
@@ -26,6 +24,9 @@ const page = () => {
   const [userName, setUserName] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [response, setReponse] = useState("");
+
+  const [copied, setCopied] = useState(false);
 
   const handleCodeChange = (value: string, isValid: boolean) => {
     setIsJson(isValid);
@@ -37,28 +38,6 @@ const page = () => {
   };
 
   const handleJsonSend = async () => {
-    // if (isDataValid()) {
-    //   setLoading(true);
-    //   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    //   const response = await fetch(`${baseUrl}/api/java-entity`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: jsonValue,
-    //   });
-    //   const data = await response.json();
-    //   console.log(data);
-    //   setLoading(false);
-    // } else {
-    //   toast({
-    //     variant: "destructive",
-    //     title: "Error",
-    //     description: "Please fill all the fields",
-    //     action: <ToastAction altText="Try again">Try again</ToastAction>,
-    //   });
-    // }
-
     setLoading(true);
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     const response = await fetch(`${baseUrl}/generate-entity`, {
@@ -68,8 +47,7 @@ const page = () => {
       },
       body: jsonValue,
     });
-    const data = await response.json();
-    console.log(data);
+    setReponse(await response.text());
     setLoading(false);
   };
 
@@ -88,9 +66,14 @@ const page = () => {
       },
       body: JSON.stringify(requestBody),
     });
-    const data = await response.json();
+    setReponse(await response.text());
     setLoading(false);
-    console.log(data);
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(response);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
@@ -110,7 +93,7 @@ const page = () => {
           <TabsTrigger value="textInput">Text Input</TabsTrigger>
         </TabsList>
         <TabsContent value="jsonInput">
-          <Card className="grid w-full mx-auto gap-2 shadow-md dark:shadow-gray-500 border-0">
+          <Card className="grid w-full mx-auto gap-2 shadow-md dark:shadow-slate-800 border-0">
             <CardHeader>
               <CardTitle>Generate Java Entity</CardTitle>
               <CardDescription>The value must be a valid JSON.</CardDescription>
@@ -197,8 +180,53 @@ const page = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {response && (
+        <Card className="grid max-w-full lg:max-w-2xl md:max-w-4xl sm:max-w-full mx-auto gap-2 dark:shadow-slate-800 border-0 shadow-none mt-10">
+          <CardHeader className="p-0">
+            <CardTitle>Response</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="relative mt-4 bg-gray-900 text-white rounded-lg p-4 font-mono text-sm whitespace-pre overflow-x-auto">
+              <Button
+                className="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white p-1 rounded transition"
+                onClick={handleCopy}
+                title="Copy to clipboard"
+              >
+                {copied ? (
+                  <Check className="h-4 w-4 text-green-400" />
+                ) : (
+                  <Clipboard className="h-4 w-4" />
+                )}
+              </Button>
+              <code>
+                {response.split("\n").map((line, index) => (
+                  <div key={index} className="leading-6">
+                    <span className="text-gray-400">{index + 1}</span>{" "}
+                    <span
+                      className={
+                        line.includes("import")
+                          ? "text-green-400"
+                          : line.includes("class")
+                          ? "text-yellow-400"
+                          : line.includes("@")
+                          ? "text-blue-400"
+                          : line.includes("private")
+                          ? "text-red-400"
+                          : "text-gray-300"
+                      }
+                    >
+                      {line}
+                    </span>
+                  </div>
+                ))}
+              </code>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
 
-export default page;
+export default Page;
